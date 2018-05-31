@@ -1,0 +1,90 @@
+---
+- setup:
+
+- name: install system packages
+  apt:
+    name: "{{ jupyter_system_packages }}"
+  become: yes
+
+- name: install python packages
+  pip:
+    virtualenv: "{{ jupyter_root_dir }}"
+    virtualenv_python: python3
+    name: "{{ jupyter_python_packages }}"
+
+- name: install stage2 packages
+  pip:
+    virtualenv: "{{ jupyter_root_dir }}"
+    name: "{{ jupyter_python_packages_stage2 }}"
+
+- name: configure notebook server
+  template:
+    src: jupyter_notebook_config.py.j2
+    dest: "{{ jupyter_root_dir }}/jupyter_notebook_config.py"
+  notify: restart jupyter
+
+- name: create work directory
+  file:
+    path: "{{ jupyter_work_dir }}"
+    state: directory
+
+- name: create directory for service unit
+  file:
+    path: "{{ jupyter_service_unit | dirname }}"
+    state: directory
+
+- name: setup user service unit
+  template:
+    src: jupyter.service.j2
+    dest: "{{ jupyter_service_unit }}"
+  notify: restart jupyter
+
+- name: start the system service
+  systemd:
+    name: "{{ jupyter_service_name }}"
+    user: yes
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: integrate with nginx
+  when: jupyter_nginx_hostname != ''
+  block:
+    - apt:
+        name: nginx
+
+    - template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-enabled/jupyter.conf
+      notify: restart nginx
+
+    - systemd:
+        name: nginx
+        enabled: yes
+        state: started
+
+    - ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+  become: yes
+
+- name: open network port working directly
+  ufw:
+    rule: allow
+    port: "{{ jupyter_port }}"
+    proto: tcp
+    delete: "{{ jupyter_nginx_hostname != '' }}"
+  become: yes
+
+- name: checkout user git repository
+  when: jupyter_git_repo != ""
+  git:
+    repo: "{{ jupyter_git_repo }}"
+    dest: "{{ jupyter_work_dir }}/{{ jupyter_git_repo_subdir }}"
+    accept_hostkey: yes
+    update: no
+
+- debug:
+    msg: "See your Jupyter at http://{{ jupyter_nginx_hostname | default(ansible_fqdn|default(inventory_hostname, true) + ':' + jupyter_port|string, true) }}/"
+...

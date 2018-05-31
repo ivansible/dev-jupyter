@@ -1,0 +1,81 @@
+---
+# this must be a subdirectory of user home directory
+jupyter_work_subdir: "jupyter"
+
+# leave blank to skip checkout of this repository
+jupyter_git_repo: ""
+
+# leave blank when password is not set
+jupyter_password: ""
+
+# leave blank to skip integration with nginx
+jupyter_nginx_hostname: ""
+
+# this port will be open if nginx is not configured
+jupyter_port: 8888
+
+jupyter_root_dir: "{{ ansible_user_dir }}/.jupyter"
+
+jupyter_work_dir: "{{ ansible_user_dir }}/{{ jupyter_work_subdir }}"
+
+jupyter_git_repo_subdir: "{{ jupyter_git_repo | basename | regex_replace('\\.git$','') }}"
+
+jupyter_password_salt: "deadbeef2018"
+
+jupyter_service_name: jupyter
+
+jupyter_service_unit: "{{ ansible_user_dir }}/.config/systemd/user/{{ jupyter_service_name }}.service"
+
+jupyter_system_packages:
+  - python3
+  - python3-dev
+  - virtualenv
+  - build-essential
+  - cmake
+  - graphviz
+  - xauth
+  - imagemagick
+
+jupyter_python_packages:
+  - certifi
+  - chardet
+  - cvxopt
+  - cython
+  - django
+  - flask
+  - graphviz
+  - ipython
+  - jupyter
+  - jupyter_contrib_core
+  - jupyter_contrib_nbextensions
+  - jupyter_highlight_selected_word
+  - jupyter_latex_envs
+  - jupyter_nbextensions_configurator
+  - matplotlib
+  - networkx
+  - numba
+  - numdifftools
+  - numpy
+  - openpyxl
+  - pandas
+  - pillow
+  - psycopg2
+  - pydot
+  - pydotplus
+  - pymongo
+  - python-dateutil
+  - requests
+  - scikit-image
+  - scikit-learn
+  - scipy
+  - scrapy
+  - seaborn
+  - sphinx
+  - sqlalchemy
+  - statsmodels
+  - sympy
+  - xlsxwriter
+
+jupyter_python_packages_stage2:
+  - cvxpy
+...

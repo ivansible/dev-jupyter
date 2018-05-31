@@ -1,0 +1,27 @@
+---
+dependencies: []
+
+galaxy_info:
+
+  author: "Ivan Andreev"
+  description: "Personal Jupyter server"
+  company: "IvanSible"
+  license: MIT
+  min_ansible_version: 2.5
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+
+  galaxy_tags:
+    - developer
+    - linux
+    - jupyter
+    - python
+    - systemd
+    - nginx
+
+  github_branch: master
+...

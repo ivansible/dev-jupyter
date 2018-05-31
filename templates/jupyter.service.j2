@@ -1,0 +1,8 @@
+[Unit]
+Description={{ jupyter_service_name }}
+
+[Service]
+ExecStart={{ jupyter_root_dir }}/bin/jupyter notebook --config={{ jupyter_root_dir }}/jupyter_notebook_config.py
+
+[Install]
+WantedBy=default.target
