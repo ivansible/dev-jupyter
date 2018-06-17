@@ -2,8 +2,8 @@
 # this must be a subdirectory of user home directory
 jupyter_work_subdir: "jupyter"
 
-# leave blank to skip checkout of this repository
-jupyter_git_repo: ""
+# leave blank to skip checkout of a repository
+jupyter_git_repos: []
 
 # leave blank when password is not set
 jupyter_password: ""
@@ -17,8 +17,6 @@ jupyter_port: 8888
 jupyter_root_dir: "{{ ansible_user_dir }}/.jupyter"
 
 jupyter_work_dir: "{{ ansible_user_dir }}/{{ jupyter_work_subdir }}"
-
-jupyter_git_repo_subdir: "{{ jupyter_git_repo | basename | regex_replace('\\.git$','') }}"
 
 jupyter_password_salt: "deadbeef2018"
 

@@ -14,12 +14,13 @@ Available variables are listed below, along with default values.
 
 A name of subdirectory in the user home directory, where notebooks will be located.
 
-    jupyter_git_repo: ""
+    jupyter_git_repos: []
 
-URL of a git repository that will be checked out during install,
+A list of git repository URLs that will be checked out during install,
 e.g. `https://github.com/ivansible/dev-jupyter.git`
 or `git@github.com:ivansible/dev-jupyter`.
 Leave this blank to skip checkout and leave the work subdirectory empty.
+Web server will redirect from home page to the first repository, if any.
 
     jupyter_password: ""
 
@@ -45,7 +46,8 @@ None
       roles:
         - role: ivansible.dev-jupyter
           jupyter_password: avadakedavra
-          jupyter_git_repo: https://github.com/ivandeex/stepik-algos.git
+          jupyter_git_repos:
+            - https://github.com/ivandeex/stepik-algos.git
           jupyter_nginx_hostname: host5.example.com
 
 ## Testing

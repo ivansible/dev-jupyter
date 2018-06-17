@@ -50,26 +50,30 @@
 - name: integrate with nginx
   when: jupyter_nginx_hostname != ''
   block:
-    - apt:
+    - name: install nginx
+      apt:
         name: nginx
 
-    - template:
+    - name: create nginx config for jupyter
+      template:
         src: nginx.conf.j2
         dest: /etc/nginx/sites-enabled/jupyter.conf
       notify: restart nginx
 
-    - systemd:
+    - name: start nginx service
+      systemd:
         name: nginx
         enabled: yes
         state: started
 
-    - ufw:
+    - name: open nginx ports
+      ufw:
         rule: allow
         port: 80
         proto: tcp
   become: yes
 
-- name: open network port working directly
+- name: open network port for direct access
   ufw:
     rule: allow
     port: "{{ jupyter_port }}"
@@ -78,12 +82,12 @@
   become: yes
 
 - name: checkout user git repository
-  when: jupyter_git_repo != ""
   git:
-    repo: "{{ jupyter_git_repo }}"
-    dest: "{{ jupyter_work_dir }}/{{ jupyter_git_repo_subdir }}"
+    repo: "{{ item }}"
+    dest: "{{ jupyter_work_dir }}/{{ item | basename | regex_replace('\\.git$','') }}"
     accept_hostkey: yes
     update: no
+  loop: "{{ jupyter_git_repos }}"
 
 - debug:
     msg: "See your Jupyter at http://{{ jupyter_nginx_hostname | default(ansible_fqdn|default(inventory_hostname, true) + ':' + jupyter_port|string, true) }}/"
