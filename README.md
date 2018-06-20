@@ -2,17 +2,19 @@
 
 Installs a jupyter server with ipython backend.
 
+
 ## Requirements
 
 None
+
 
 ## Variables
 
 Available variables are listed below, along with default values.
 
-    jupyter_work_subdir: "jupyter"
+    jupyter_work_subdir: jupyter
 
-A name of subdirectory in the user home directory, where notebooks will be located.
+Subdirectory in the user home directory, where notebooks will be located.
 
     jupyter_git_repos: []
 
@@ -21,6 +23,15 @@ e.g. `https://github.com/ivansible/dev-jupyter.git`
 or `git@github.com:ivansible/dev-jupyter`.
 Leave this blank to skip checkout and leave the work subdirectory empty.
 Web server will redirect from home page to the first repository, if any.
+
+    jupyter_pip_extras: []
+
+Additional python packages to install.
+
+    jupyter_theme: ""
+
+If not blank, the script will configure jupyter theme.
+See [jt documentation](https://github.com/dunovank/jupyter-themes).
 
     jupyter_password: ""
 
@@ -36,9 +47,11 @@ Leave this blank to serve notebooks directly.
 
 This is the port where jupyter will serve notebooks if nginx is not installed.
 
+
 ## Dependencies
 
 None
+
 
 ## Example Playbook
 
@@ -48,7 +61,11 @@ None
           jupyter_password: avadakedavra
           jupyter_git_repos:
             - https://github.com/ivandeex/stepik-algos.git
+          jupyter_pip_extras:
+            - bs4
+          jupyter_theme: "-t gruvboxd -T -cellw 99% -f roboto -fs 10 -ofs 10 -tf robotosans -nf ptsans -nfs 10 -tfs 11 -dfs 10"
           jupyter_nginx_hostname: host5.example.com
+
 
 ## Testing
 
@@ -56,9 +73,11 @@ None
 
 See settings in `host_vars/dock2/secret/test-role.dev-jupyter.yml`
 
+
 ## License
 
 MIT
+
 
 ## Author Information
 

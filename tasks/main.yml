@@ -10,18 +10,35 @@
   pip:
     virtualenv: "{{ jupyter_root_dir }}"
     virtualenv_python: python3
-    name: "{{ jupyter_python_packages }}"
+    name: "{{ jupyter_pip_stage1 | list }}"
 
 - name: install stage2 packages
   pip:
     virtualenv: "{{ jupyter_root_dir }}"
-    name: "{{ jupyter_python_packages_stage2 }}"
+    name: "{{ (jupyter_pip_stage2 | list)
+            + (jupyter_pip_extras | list) }}"
 
 - name: configure notebook server
   template:
     src: jupyter_notebook_config.py.j2
     dest: "{{ jupyter_root_dir }}/jupyter_notebook_config.py"
   notify: restart jupyter
+
+- block:
+    - name: check current theme
+      copy:
+        content: "{{ jupyter_theme }}"
+        dest: "{{ jupyter_root_dir }}/theme-marker.txt"
+      register: theme_marker
+
+    - name: change jupyter theme
+      when: theme_marker is changed
+      command: ./bin/jt {{ jupyter_theme }}
+      args:
+        chdir: "{{ jupyter_root_dir }}"
+      register: run_jt
+      failed_when: "run_jt.rc not in [0,1]"
+  when: "jupyter_theme != ''"
 
 - name: create work directory
   file:

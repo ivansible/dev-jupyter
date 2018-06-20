@@ -1,6 +1,6 @@
 ---
 # this must be a subdirectory of user home directory
-jupyter_work_subdir: "jupyter"
+jupyter_work_subdir: jupyter
 
 # leave blank to skip checkout of a repository
 jupyter_git_repos: []
@@ -34,7 +34,7 @@ jupyter_system_packages:
   - xauth
   - imagemagick
 
-jupyter_python_packages:
+jupyter_pip_stage1:
   - certifi
   - chardet
   - cvxopt
@@ -72,8 +72,15 @@ jupyter_python_packages:
   - sqlalchemy
   - statsmodels
   - sympy
+  - xlrd
   - xlsxwriter
+  - jupyterthemes
+  - bs4
 
-jupyter_python_packages_stage2:
+jupyter_pip_stage2:
   - cvxpy
+
+jupyter_pip_extras: []
+
+jupyter_theme: ""
 ...
