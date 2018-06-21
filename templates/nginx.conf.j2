@@ -1,6 +1,13 @@
 server {
-    listen  80;
     server_name  {{ jupyter_nginx_hostname }};
+
+    listen  80;
+{% if jupyter_nginx_ssl_cert and jupyter_nginx_ssl_pkey %}
+    listen 443 ssl http2;
+    ssl_certificate     {{ jupyter_nginx_ssl_cert }};
+    ssl_certificate_key {{ jupyter_nginx_ssl_pkey }};
+    if ( $https = "" ) { return 301 "https://$host$uri"; }
+{% endif %}
 
     location /  {
         root  /nosuch;

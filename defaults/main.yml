@@ -11,6 +11,10 @@ jupyter_password: ""
 # leave blank to skip integration with nginx
 jupyter_nginx_hostname: ""
 
+# certificate and private key for ssl
+jupyter_nginx_ssl_cert: ""
+jupyter_nginx_ssl_pkey: ""
+
 # this port will be open if nginx is not configured
 jupyter_port: 8888
 

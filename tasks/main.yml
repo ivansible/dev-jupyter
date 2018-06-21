@@ -90,7 +90,7 @@
         proto: tcp
   become: yes
 
-- name: open network port for direct access
+- name: open or close network port for direct access
   ufw:
     rule: allow
     port: "{{ jupyter_port }}"

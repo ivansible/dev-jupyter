@@ -43,6 +43,12 @@ If you set this to a host name of the jupyter server, ansible will
 additionally configure `nginx` on port 80 in front of the jupyter server.
 Leave this blank to serve notebooks directly.
 
+    jupyter_nginx_ssl_cert: ""
+    jupyter_nginx_ssl_pkey: ""
+
+Certificate and private key for SSL access on port 443.
+If these are configured, nginx will forcibly redirect port 80 to SSL.
+
     jupyter_port: 8888
 
 This is the port where jupyter will serve notebooks if nginx is not installed.
