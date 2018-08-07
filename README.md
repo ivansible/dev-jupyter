@@ -75,9 +75,9 @@ None
 
 ## Testing
 
-    ansible-playbook plays-all/test-role.yml -e role=ivansible.dev-jupyter -l dock2
+    ansible-playbook plays-all/run-role.yml -e role=ivansible.dev-jupyter -l vag2
 
-See settings in `host_vars/dock2/secret/test-role.dev-jupyter.yml`
+See settings in `host_vars/vag2/secret/test-role.dev-jupyter.yml`
 
 
 ## License
