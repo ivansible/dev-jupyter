@@ -2,7 +2,7 @@
 dependencies: []
 
 galaxy_info:
-
+  role_name: dev_jupyter
   author: "Ivan Andreev"
   description: "Personal Jupyter server"
   company: "IvanSible"

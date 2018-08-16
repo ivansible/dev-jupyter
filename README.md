@@ -1,4 +1,4 @@
-# ivansible.dev-jupyter
+# ivansible.dev_jupyter
 
 Installs a jupyter server with ipython backend.
 
@@ -63,7 +63,7 @@ None
 
     - hosts: host5
       roles:
-        - role: ivansible.dev-jupyter
+        - role: ivansible.dev_jupyter
           jupyter_password: avadakedavra
           jupyter_git_repos:
             - https://github.com/ivandeex/stepik-algos.git
@@ -75,9 +75,9 @@ None
 
 ## Testing
 
-    ansible-playbook plays-all/run-role.yml -e role=ivansible.dev-jupyter -l vag2
+    ansible-playbook plays-all/run-role.yml -e role=ivansible.dev_jupyter -l vag2
 
-See settings in `host_vars/vag2/secret/test-role.dev-jupyter.yml`
+See settings in `host_vars/vag2/secret/test.dev_jupyter.yml`
 
 
 ## License
