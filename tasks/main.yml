@@ -86,6 +86,7 @@
         rule: allow
         port: 80
         proto: tcp
+      no_log: true
   become: yes
 
 - name: open or close network port for direct access
@@ -94,6 +95,7 @@
     port: "{{ jupyter_port }}"
     proto: tcp
     delete: "{{ jupyter_nginx_hostname != '' }}" # noqa 602
+  no_log: true
   become: yes
 
 - name: checkout user git repository
