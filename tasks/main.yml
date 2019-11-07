@@ -1,5 +1,7 @@
 ---
-- setup:
+- name: refresh host facts as non-root
+  setup:
+  become: no
 
 - name: install system packages
   apt:
@@ -38,7 +40,7 @@
         chdir: "{{ jupyter_root_dir }}"
       register: run_jt
       failed_when: "run_jt.rc not in [0,1]"
-  when: "jupyter_theme != ''"
+  when: jupyter_theme != '' # noqa 602
 
 - name: create work directory
   file:
@@ -65,7 +67,7 @@
     state: started
 
 - name: integrate with nginx
-  when: jupyter_nginx_hostname != ''
+  when: jupyter_nginx_hostname != '' # noqa 602
   block:
     - name: install nginx
       apt:
@@ -95,7 +97,7 @@
     rule: allow
     port: "{{ jupyter_port }}"
     proto: tcp
-    delete: "{{ jupyter_nginx_hostname != '' }}"
+    delete: "{{ jupyter_nginx_hostname != '' }}" # noqa 602
   become: yes
 
 - name: checkout user git repository
@@ -107,5 +109,7 @@
   loop: "{{ jupyter_git_repos }}"
 
 - debug:
-    msg: "See your Jupyter at http://{{ jupyter_nginx_hostname | default(ansible_fqdn|default(inventory_hostname, true) + ':' + jupyter_port|string, true) }}/"
+    msg: "See your Jupyter at http://{{ jupyter_nginx_hostname |default(fallback_hostname) }}/"
+  vars:
+    fallback_hostname: "{{ ansible_fqdn |default(inventory_hostname, true) }}:{{ jupyter_port }}"
 ...
