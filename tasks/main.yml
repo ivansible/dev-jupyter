@@ -1,8 +1,4 @@
 ---
-- name: refresh host facts as non-root
-  setup:
-  become: no
-
 - name: install system packages
   apt:
     name: "{{ jupyter_system_packages }}"
