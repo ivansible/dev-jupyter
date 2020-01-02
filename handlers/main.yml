@@ -2,12 +2,12 @@
 - name: restart jupyter
   systemd:
     name: "{{ jupyter_service_name }}"
-    user: yes
+    user: true
     state: restarted
 
 - name: restart nginx
   systemd:
     name: nginx
     state: restarted
-  become: yes
+  become: true
 ...

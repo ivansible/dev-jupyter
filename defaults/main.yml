@@ -22,7 +22,7 @@ jupyter_root_dir: "{{ ansible_user_dir }}/.jupyter"
 
 jupyter_work_dir: "{{ ansible_user_dir }}/{{ jupyter_work_subdir }}"
 
-jupyter_password_salt: "deadbeef2018"
+jupyter_password_salt: deadbeef2018
 
 jupyter_service_name: jupyter
 
@@ -37,6 +37,7 @@ jupyter_system_packages:
   - graphviz
   - xauth
   - imagemagick
+  - libpq-dev
 
 jupyter_pip_stage1:
   - certifi

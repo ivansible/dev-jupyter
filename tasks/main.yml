@@ -2,7 +2,7 @@
 - name: install system packages
   apt:
     name: "{{ jupyter_system_packages }}"
-  become: yes
+  become: true
 
 - name: install python packages
   pip:
@@ -36,7 +36,7 @@
         chdir: "{{ jupyter_root_dir }}"
       register: run_jt
       failed_when: "run_jt.rc not in [0,1]"
-  when: jupyter_theme != '' # noqa 602
+  when: jupyter_theme != ''  # noqa 602
 
 - name: create work directory
   file:
@@ -57,13 +57,13 @@
 - name: start the system service
   systemd:
     name: "{{ jupyter_service_name }}"
-    user: yes
-    daemon_reload: yes
-    enabled: yes
+    user: true
+    daemon_reload: true
+    enabled: true
     state: started
 
 - name: integrate with nginx
-  when: jupyter_nginx_hostname != '' # noqa 602
+  when: jupyter_nginx_hostname != ''  # noqa 602
   block:
     - name: install nginx
       apt:
@@ -78,32 +78,58 @@
     - name: start nginx service
       systemd:
         name: nginx
-        enabled: yes
+        enabled: true
         state: started
 
-    - name: open nginx ports
+
+    - name: open nginx ports in ufw
       ufw:
         rule: allow
         port: 80
         proto: tcp
-      no_log: true
-  become: yes
+      no_log: "{{ hide_secrets |true }}"
+      when: lin_firewall == 'ufw'
 
-- name: open or close network port for direct access
+    - name: open nginx ports in ferm
+      ferm_port:
+        port: 80
+        proto: tcp
+        # comment as nginx rather than jupyter for idempotence
+        comment: nginx
+      tags: skip_ansible_lint
+      when: lin_firewall == 'ferm'
+  become: true
+
+
+- name: open/close network port for direct access in ufw
   ufw:
     rule: allow
+    port: "{{ jupyter_port |string }}"
+    proto: tcp
+    delete: "{{ jupyter_nginx_hostname != '' }}"  # noqa 602
+  no_log: "{{ hide_secrets |bool }}"
+  become: true
+  when: lin_firewall == 'ufw'
+
+- name: open/close network port for direct access in ferm
+  ferm_port:
     port: "{{ jupyter_port }}"
     proto: tcp
-    delete: "{{ jupyter_nginx_hostname != '' }}" # noqa 602
-  no_log: true
-  become: yes
+    domain: external
+    state: "{{ (jupyter_nginx_hostname != '') |ternary('absent','present') }}"  # noqa 602
+    comment: jupyter
+  no_log: "{{ hide_secrets |bool }}"
+  become: true
+  when: lin_firewall == 'ferm'
+
 
 - name: checkout user git repository
   git:
     repo: "{{ item }}"
-    dest: "{{ jupyter_work_dir }}/{{ item | basename | regex_replace('\\.git$','') }}"
-    accept_hostkey: yes
-    update: no
+    version: master
+    dest: "{{ jupyter_work_dir }}/{{ item |basename |regex_replace('\\.git$','') }}"
+    accept_hostkey: true
+    update: false
   loop: "{{ jupyter_git_repos }}"
 
 - debug:
