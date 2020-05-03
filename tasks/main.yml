@@ -115,7 +115,7 @@
   ferm_port:
     port: "{{ jupyter_port }}"
     proto: tcp
-    domain: external
+    zone: external
     state: "{{ (jupyter_nginx_hostname != '') |ternary('absent','present') }}"  # noqa 602
     comment: jupyter
   no_log: "{{ hide_secrets |bool }}"
